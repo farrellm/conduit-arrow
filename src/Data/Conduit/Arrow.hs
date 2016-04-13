@@ -2,7 +2,7 @@
 
 module Data.Conduit.Arrow
        (getConduit
-       , ConduitArrow
+       , ConduitArrow()
        , (=$>>)
        , (>>$=)
        , (>>$$)
