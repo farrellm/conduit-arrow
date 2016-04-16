@@ -18,10 +18,12 @@ library
   exposed-modules:     Data.Conduit.Arrow
                      , Data.Conduit.Arrow.Combinators
                      , Data.Conduit.Arrow.Internal
+                     , Data.Conduit.Arrow.Lift
   build-depends:       base >= 4.7 && < 5
                      , conduit
                      , conduit-combinators
                      , mono-traversable
+                     , transformers
   default-language:    Haskell2010
 
 test-suite conduit-arrow-test
