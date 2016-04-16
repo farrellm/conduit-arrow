@@ -45,6 +45,7 @@ scanl0C f =
             seed' `seq` yield seed'
             _loop seed'
 
+-- | Version of 'scanl' that does not yield the seed
 scanl0 :: Monad m => (a -> b -> a) -> a -> ConduitArrow m  b a
 scanl0 f = ConduitArrow . scanl0C f
 
@@ -77,5 +78,6 @@ scanl0MC f =
             seed' `seq` yield seed'
             _loop seed'
 
+-- | Version of 'scanlM' that does not yield the seed
 scanl0M :: Monad m => (a -> b -> m a) -> a -> ConduitArrow m  b a
 scanl0M f = ConduitArrow . scanl0MC f
