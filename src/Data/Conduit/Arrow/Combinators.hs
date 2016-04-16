@@ -10,7 +10,7 @@ module Data.Conduit.Arrow.Combinators
        , scanlM
        ) where
 
-import Prelude hiding ((.), id, map, scanl, mapM)
+import Prelude hiding ((.), map, scanl, mapM)
 
 import           Control.Category
 import           Control.Arrow
