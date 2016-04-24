@@ -30,10 +30,17 @@ test-suite conduit-arrow-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  build-depends:       base
-                     , conduit-arrow
+  other-modules:       Data.Conduit.Arrow.CombinatorsTest
+  build-depends:       HUnit
                      , QuickCheck
+                     , base
                      , checkers
+                     , conduit
+                     , conduit-arrow
+                     , conduit-combinators
+                     , mtl
+                     , test-framework
+                     , test-framework-hunit
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
