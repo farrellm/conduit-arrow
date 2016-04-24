@@ -9,6 +9,11 @@ import           Data.Conduit
 import qualified Data.Conduit.Combinators as CC
 import           Data.Either
 
+zipFirstC :: Monad m => Conduit a m b -> Conduit (a, b1) m (Maybe (Either b b1))
+zipFirstC c = getZipConduit (ZipConduit (CC.map fst =$= c =$= CC.map (Just . Left)) <*
+                             ZipConduit (CC.map snd =$= CC.map (Just . Right)) <*
+                             ZipConduit (CC.mapM (const $ pure Nothing)))
+
 newtype ConduitArrow m i o = ConduitArrow {getConduit :: Conduit i m o}
 
 instance (Monad m) => Category (ConduitArrow m) where
@@ -19,9 +24,7 @@ instance Monad m => Arrow (ConduitArrow m) where
   arr f = ConduitArrow . awaitForever $ yield . f
 
   first (ConduitArrow c) = ConduitArrow $
-    getZipConduit (ZipConduit (CC.map fst =$= c =$= CC.map (Just . Left)) <*
-                   ZipConduit (CC.map snd =$= CC.map (Just . Right)) <*
-                   ZipConduit (CC.map $ const Nothing)) =$=
+    zipFirstC c =$=
     split [] =$=
     CC.map partitionEithers =$=
     CC.concatMap (uncurry zip)
