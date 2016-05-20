@@ -72,8 +72,8 @@ split (ConduitM left0) (ConduitM right0) = ConduitM $ \rest -> let
   in go (return ()) (return ()) (injectLeftovers $ left0 Done) (injectLeftovers $ right0 Done)
 
 
-feedback :: Monad m => a -> Conduit (b, a) m (c, a) -> Conduit b m c
-feedback n c = evalStateLC (singleton n) . loop $ transPipe lift c
+feedback :: Monad m => Conduit (a, c) m (b, c) -> c -> Conduit a m b
+feedback c n = evalStateLC (singleton n) . loop $ transPipe lift c
   where loop (ConduitM p) =  ConduitM $ \rest -> let
           go _ (Done ()) = rest ()
 

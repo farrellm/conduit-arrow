@@ -15,11 +15,11 @@ suite = testGroup "Data.Conduit.Plumbing"
   [ t_feedback
   ]
 
-testFeedback :: a -> Conduit (b, a) Identity (c, a) -> [b] -> Identity [c]
-testFeedback i c xs = yieldMany xs =$= feedback i c $$ sinkList
+testFeedback :: Conduit (a, c) Identity (b, c) -> c -> [a] -> Identity [b]
+testFeedback c i xs = yieldMany xs =$= feedback c i $$ sinkList
 
 t_feedback :: Test.Framework.Test
 t_feedback = testGroup "feedback"
   [ testCase "feedback" $ (pure [1..5] @?=
-                           testFeedback 0 (CC.map ((\x -> (x, x)) . (+1) . snd)) [1, 1, 1, 1, 1])
+                           testFeedback (CC.map ((\x -> (x, x)) . (+1) . snd)) 0 [1, 1, 1, 1, 1])
   ]
