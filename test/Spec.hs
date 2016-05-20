@@ -1,4 +1,5 @@
 import Data.Conduit.Arrow.CombinatorsTest
+import Data.Conduit.PlumbingTest
 
 import Test.HUnit
 import Test.Framework
@@ -6,4 +7,6 @@ import Test.Framework
 
 main :: IO ()
 main = defaultMain
-  [ Data.Conduit.Arrow.CombinatorsTest.suite ]
+  [ Data.Conduit.Arrow.CombinatorsTest.suite
+  , Data.Conduit.PlumbingTest.suite
+  ]

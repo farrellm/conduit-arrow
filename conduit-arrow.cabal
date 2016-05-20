@@ -19,10 +19,13 @@ library
                      , Data.Conduit.Arrow.Combinators
                      , Data.Conduit.Arrow.Internal
                      , Data.Conduit.Arrow.Lift
+                     , Data.Conduit.Plumbing
   build-depends:       base >= 4.7 && < 5
                      , conduit
                      , conduit-combinators
+                     , containers
                      , mono-traversable
+                     , mtl
                      , transformers
   default-language:    Haskell2010
 
@@ -31,6 +34,7 @@ test-suite conduit-arrow-test
   hs-source-dirs:      test
   main-is:             Spec.hs
   other-modules:       Data.Conduit.Arrow.CombinatorsTest
+                     , Data.Conduit.PlumbingTest
   build-depends:       HUnit
                      , QuickCheck
                      , base
