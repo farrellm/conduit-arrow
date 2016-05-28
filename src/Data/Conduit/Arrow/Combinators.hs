@@ -1,3 +1,4 @@
+
 module Data.Conduit.Arrow.Combinators
        ( map
        , mapE
@@ -18,6 +19,7 @@ import           Control.Monad.Trans.Class
 import           Data.Conduit
 import           Data.Conduit.Arrow.Internal
 import qualified Data.Conduit.Combinators as CC
+import qualified Data.Conduit.Plumbing as CP
 import           Data.MonoTraversable
 
 map :: Monad m => (a -> b) -> ConduitArrow m a b
@@ -32,22 +34,9 @@ omapE = ConduitArrow . CC.omapE
 scanl :: Monad m => (a -> b -> a) -> a -> ConduitArrow m b a
 scanl f a = ConduitArrow $ CC.scanl f a
 
--- taken from conduit-combinators-1.0.3.1, Data.Conduit.Combinators.scanl
-scanl0C :: Monad m => (a -> b -> a) -> a -> Conduit b m a
-scanl0C f =
-    _loop
-  where
-    _loop seed =
-        await >>= maybe (pure ()) go
-      where
-        go b = do
-            let seed' = f seed b
-            seed' `seq` yield seed'
-            _loop seed'
-
 -- | Version of 'scanl' that does not yield the seed
 scanl0 :: Monad m => (a -> b -> a) -> a -> ConduitArrow m  b a
-scanl0 f = ConduitArrow . scanl0C f
+scanl0 f = ConduitArrow . CP.scanl0 f
 
 mapM :: Monad m => (a -> m b) -> ConduitArrow m a b
 mapM = ConduitArrow . CC.mapM
@@ -65,19 +54,6 @@ iterM = ConduitArrow . CC.iterM
 scanlM :: Monad m => (a -> b -> m a) -> a -> ConduitArrow m b a
 scanlM f a = ConduitArrow $ CC.scanlM f a
 
--- taken from conduit-combinators-1.0.3.1, Data.Conduit.Combinators.scanlM
-scanl0MC :: Monad m => (a -> b -> m a) -> a -> Conduit b m a
-scanl0MC f =
-    _loop
-  where
-    _loop seed =
-        await >>= maybe (pure ()) go
-      where
-        go b = do
-            seed' <- lift $ f seed b
-            seed' `seq` yield seed'
-            _loop seed'
-
 -- | Version of 'scanlM' that does not yield the seed
 scanl0M :: Monad m => (a -> b -> m a) -> a -> ConduitArrow m  b a
-scanl0M f = ConduitArrow . scanl0MC f
+scanl0M f = ConduitArrow . CP.scanl0M f

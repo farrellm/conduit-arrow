@@ -5,6 +5,8 @@ module Data.Conduit.Plumbing
        , fanout
        , split
        , feedback
+       , scanl0
+       , scanl0M
        ) where
 
 import Prelude hiding (zip, zipWith)
@@ -96,3 +98,21 @@ feedback c n = evalStateLC (singleton n) . loop $ transPipe lift c
                   (go finalX . cx))
 
           in go (return ()) (injectLeftovers $ p Done)
+
+-- taken from conduit-combinators-1.0.3.1, Data.Conduit.Combinators.scanl
+scanl0 :: Monad m => (a -> b -> a) -> a -> Conduit b m a
+scanl0 f = _loop
+  where _loop seed = await >>= maybe (pure ()) go
+          where go b =
+                  do let seed' = f seed b
+                     seed' `seq` yield seed'
+                     _loop seed'
+
+-- taken from conduit-combinators-1.0.3.1, Data.Conduit.Combinators.scanlM
+scanl0M :: Monad m => (a -> b -> m a) -> a -> Conduit b m a
+scanl0M f = _loop
+  where _loop seed = await >>= maybe (pure ()) go
+          where go b =
+                  do seed' <- lift $ f seed b
+                     seed' `seq` yield seed'
+                     _loop seed'
